@@ -8,7 +8,6 @@ import {
   Scripts,
 } from "@tanstack/react-router";
 import { useEffect, type ReactNode } from "react";
-import { Toaster } from "sonner";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
@@ -78,14 +77,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "VENADO ROUTE" },
+      { name: "description", content: "Venado Route Manager is a mobile PWA for route management and sales execution." },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "VENADO ROUTE" },
+      { property: "og:description", content: "Venado Route Manager is a mobile PWA for route management and sales execution." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "VENADO ROUTE" },
+      { name: "twitter:description", content: "Venado Route Manager is a mobile PWA for route management and sales execution." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8bd9b8bc-cccc-424d-9ffd-d74fd5cb4eeb/id-preview-9c838e7a--f72b1553-287d-441e-b516-8fc283ba3fd1.lovable.app-1780200474028.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/8bd9b8bc-cccc-424d-9ffd-d74fd5cb4eeb/id-preview-9c838e7a--f72b1553-287d-441e-b516-8fc283ba3fd1.lovable.app-1780200474028.png" },
     ],
     links: [
       {
@@ -119,8 +122,8 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
+      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
-      <Toaster position="top-center" richColors />
     </QueryClientProvider>
   );
 }
