@@ -1,19 +1,7 @@
-import { useEffect } from "react";
 import { Calendar, Share2, AlertTriangle, MapPin, CheckCircle, ChevronRight, Brain, Sparkles, BarChart3, TrendingUp, Clock, ArrowDown, ArrowUp } from "lucide-react";
 import { SupHeader } from "./Dashboard";
-import { useStore } from "@/lib/store";
 
 export function IASoluciones() {
-  const { markNotificationRead, notifications } = useStore();
-
-  // Mark IA notification as read when this view is opened
-  useEffect(() => {
-    const iaNotification = notifications.find((n) => n.type === "ia_recommendation" && !n.read);
-    if (iaNotification) {
-      markNotificationRead(iaNotification.id);
-    }
-  }, [notifications, markNotificationRead]);
-
   return (
     <div className="flex flex-col gap-4 pb-6">
       <SupHeader />
