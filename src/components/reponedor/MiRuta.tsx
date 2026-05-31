@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Sparkles, X, Store, Tag, DollarSign, CheckCircle2, Loader2 } from "lucide-react";
 import { AppHeader, DateChip } from "../AppHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { useStore } from "@/lib/store";
 import { toast } from "sonner";
 
 type Cliente = {
