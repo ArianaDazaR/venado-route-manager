@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { Eye, EyeOff, User, Lock, ArrowRight, Shield, Wifi } from "lucide-react";
+import { Eye, EyeOff, User, Lock, ArrowRight, Shield, Wifi, HelpCircle } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { VenadoLogo } from "./VenadoLogo";
+import { Instructions } from "./Instructions";
 
 export function Login() {
+  const [help, setHelp] = useState(false);
+  if (help) return <Instructions onBack={() => setHelp(false)} />;
+  return <LoginForm onHelp={() => setHelp(true)} />;
+}
+
+function LoginForm({ onHelp }: { onHelp: () => void }) {
   const { login } = useStore();
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
