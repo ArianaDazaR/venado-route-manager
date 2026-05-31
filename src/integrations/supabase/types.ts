@@ -14,7 +14,84 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      clientes_trade_lp: {
+        Row: {
+          categoria_pareto: string | null
+          codigo_fijo_venado: number | null
+          estado_cumplimiento: string | null
+          id: string
+          id_cliente_lovable: string
+          jueves: number | null
+          latitud: number | null
+          longitud: number | null
+          lunes: number | null
+          marca_foco_venta: string | null
+          martes: number | null
+          material_pop_asignado: string | null
+          mensual: number | null
+          mercado_zona: string | null
+          miercoles: number | null
+          nro: number | null
+          reponedor: string | null
+          sabado: number | null
+          semanal: number | null
+          supervisor: string | null
+          tiempo_visita_minutos: number | null
+          viernes: number | null
+          volumen_compra_bs: number | null
+        }
+        Insert: {
+          categoria_pareto?: string | null
+          codigo_fijo_venado?: number | null
+          estado_cumplimiento?: string | null
+          id?: string
+          id_cliente_lovable: string
+          jueves?: number | null
+          latitud?: number | null
+          longitud?: number | null
+          lunes?: number | null
+          marca_foco_venta?: string | null
+          martes?: number | null
+          material_pop_asignado?: string | null
+          mensual?: number | null
+          mercado_zona?: string | null
+          miercoles?: number | null
+          nro?: number | null
+          reponedor?: string | null
+          sabado?: number | null
+          semanal?: number | null
+          supervisor?: string | null
+          tiempo_visita_minutos?: number | null
+          viernes?: number | null
+          volumen_compra_bs?: number | null
+        }
+        Update: {
+          categoria_pareto?: string | null
+          codigo_fijo_venado?: number | null
+          estado_cumplimiento?: string | null
+          id?: string
+          id_cliente_lovable?: string
+          jueves?: number | null
+          latitud?: number | null
+          longitud?: number | null
+          lunes?: number | null
+          marca_foco_venta?: string | null
+          martes?: number | null
+          material_pop_asignado?: string | null
+          mensual?: number | null
+          mercado_zona?: string | null
+          miercoles?: number | null
+          nro?: number | null
+          reponedor?: string | null
+          sabado?: number | null
+          semanal?: number | null
+          supervisor?: string | null
+          tiempo_visita_minutos?: number | null
+          viernes?: number | null
+          volumen_compra_bs?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
