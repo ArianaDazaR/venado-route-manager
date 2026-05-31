@@ -92,6 +92,36 @@ export type Database = {
         }
         Relationships: []
       }
+      credenciales_accesos: {
+        Row: {
+          activo: boolean
+          codigo: string
+          created_at: string
+          id: string
+          nombre_asignado: string
+          password: string
+          rol: string
+        }
+        Insert: {
+          activo?: boolean
+          codigo: string
+          created_at?: string
+          id?: string
+          nombre_asignado: string
+          password: string
+          rol: string
+        }
+        Update: {
+          activo?: boolean
+          codigo?: string
+          created_at?: string
+          id?: string
+          nombre_asignado?: string
+          password?: string
+          rol?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

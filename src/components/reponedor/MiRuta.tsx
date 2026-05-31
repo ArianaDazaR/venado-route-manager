@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { MapPin, Sparkles, X, Store, Tag, DollarSign, CheckCircle2, Loader2 } from "lucide-react";
 import { AppHeader, DateChip } from "../AppHeader";
 import { supabase } from "@/integrations/supabase/client";
+import { useStore } from "@/lib/store";
 import { toast } from "sonner";
 
 type Cliente = {
@@ -15,6 +16,7 @@ type Cliente = {
   marca_foco_venta: string | null;
   material_pop_asignado: string | null;
   estado_cumplimiento: string | null;
+  reponedor: string | null;
   lunes: number; martes: number; miercoles: number;
   jueves: number; viernes: number; sabado: number;
 };
@@ -31,6 +33,7 @@ const DAYS = [
 type DayKey = typeof DAYS[number]["key"];
 
 export function MiRuta() {
+  const { nombreAsignado, role } = useStore();
   const [clientes, setClientes] = useState<Cliente[]>([]);
   const [loading, setLoading] = useState(true);
   const [day, setDay] = useState<DayKey>("lunes");
@@ -39,15 +42,20 @@ export function MiRuta() {
 
   useEffect(() => {
     (async () => {
-      const { data, error } = await supabase
+      setLoading(true);
+      let q = supabase
         .from("clientes_trade_lp")
-        .select("id,id_cliente_lovable,mercado_zona,categoria_pareto,latitud,longitud,volumen_compra_bs,marca_foco_venta,material_pop_asignado,estado_cumplimiento,lunes,martes,miercoles,jueves,viernes,sabado")
+        .select("id,id_cliente_lovable,mercado_zona,categoria_pareto,latitud,longitud,volumen_compra_bs,marca_foco_venta,material_pop_asignado,estado_cumplimiento,reponedor,lunes,martes,miercoles,jueves,viernes,sabado")
         .limit(1000);
+      if (role === "reponedor" && nombreAsignado) {
+        q = q.eq("reponedor", nombreAsignado);
+      }
+      const { data, error } = await q;
       if (error) toast.error("Error cargando clientes");
       else setClientes((data || []) as Cliente[]);
       setLoading(false);
     })();
-  }, []);
+  }, [nombreAsignado, role]);
 
   const filtered = useMemo(
     () => clientes.filter((c) => (c as any)[day] === 1 && c.latitud != null && c.longitud != null),

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Role = "reponedor" | "supervisor";
 
@@ -62,7 +63,8 @@ interface Store {
   role: Role | null;
   userId: string;
   userName: string;
-  login: (id: string, pwd: string) => Role | null;
+  nombreAsignado: string;
+  login: (id: string, pwd: string) => Promise<Role | null>;
   logout: () => void;
   visits: VisitExec[];
   setVisits: (v: VisitExec[]) => void;
@@ -76,35 +78,36 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [role, setRole] = useState<Role | null>(null);
   const [userId, setUserId] = useState("");
   const [userName, setUserName] = useState("");
+  const [nombreAsignado, setNombreAsignado] = useState("");
   const [visits, setVisits] = useState<VisitExec[]>(initialVisits());
   const [activeVisitId, setActiveVisitId] = useState<number | null>(null);
 
-  const login = (id: string, pwd: string): Role | null => {
-    if (id === "SV-1234" && pwd === "4321") {
-      setRole("supervisor");
-      setUserId(id);
-      setUserName("Juan Pérez");
-      return "supervisor";
-    }
-    if (id === "RV-1234" && pwd === "1234") {
-      setRole("reponedor");
-      setUserId(id);
-      setUserName("Juan Pérez");
-      return "reponedor";
-    }
-    return null;
+  const login = async (id: string, pwd: string): Promise<Role | null> => {
+    const { data, error } = await supabase
+      .from("credenciales_accesos")
+      .select("codigo,password,rol,nombre_asignado,activo")
+      .eq("codigo", id)
+      .maybeSingle();
+    if (error || !data || !data.activo || data.password !== pwd) return null;
+    const mapped: Role = data.rol === "SUPERVISOR" ? "supervisor" : "reponedor";
+    setRole(mapped);
+    setUserId(data.codigo);
+    setUserName(data.nombre_asignado);
+    setNombreAsignado(data.nombre_asignado);
+    return mapped;
   };
 
   const logout = () => {
     setRole(null);
     setUserId("");
     setUserName("");
+    setNombreAsignado("");
     setVisits(initialVisits());
     setActiveVisitId(null);
   };
 
   return (
-    <Ctx.Provider value={{ role, userId, userName, login, logout, visits, setVisits, activeVisitId, setActiveVisitId }}>
+    <Ctx.Provider value={{ role, userId, userName, nombreAsignado, login, logout, visits, setVisits, activeVisitId, setActiveVisitId }}>
       {children}
     </Ctx.Provider>
   );

@@ -18,10 +18,11 @@ function LoginForm({ onHelp }: { onHelp: () => void }) {
   const [remember, setRemember] = useState(true);
   const [err, setErr] = useState("");
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const role = login(id.trim(), pwd);
-    if (!role) setErr("Credenciales incorrectas. Prueba RV-1234 / 1234 o SV-1234 / 4321");
+    setErr("");
+    const role = await login(id.trim(), pwd);
+    if (!role) setErr("Credenciales incorrectas. Verifica tu ID y contraseña.");
   };
 
   return (
