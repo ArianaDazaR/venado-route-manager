@@ -16,6 +16,7 @@ type Cliente = {
   marca_foco_venta: string | null;
   material_pop_asignado: string | null;
   estado_cumplimiento: string | null;
+  reponedor: string | null;
   lunes: number; martes: number; miercoles: number;
   jueves: number; viernes: number; sabado: number;
 };
