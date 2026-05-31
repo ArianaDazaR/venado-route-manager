@@ -1,9 +1,16 @@
 import { useState } from "react";
-import { Eye, EyeOff, User, Lock, ArrowRight, Shield, Wifi } from "lucide-react";
+import { Eye, EyeOff, User, Lock, ArrowRight, Shield, Wifi, HelpCircle } from "lucide-react";
 import { useStore } from "@/lib/store";
 import { VenadoLogo } from "./VenadoLogo";
+import { Instructions } from "./Instructions";
 
 export function Login() {
+  const [help, setHelp] = useState(false);
+  if (help) return <Instructions onBack={() => setHelp(false)} />;
+  return <LoginForm onHelp={() => setHelp(true)} />;
+}
+
+function LoginForm({ onHelp }: { onHelp: () => void }) {
   const { login } = useStore();
   const [id, setId] = useState("");
   const [pwd, setPwd] = useState("");
@@ -19,6 +26,13 @@ export function Login() {
 
   return (
     <div className="relative flex min-h-full flex-col bg-background px-6 pb-10 pt-10">
+      <button
+        onClick={onHelp}
+        aria-label="Instrucciones de uso"
+        className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary shadow-sm active:scale-95"
+      >
+        <HelpCircle className="h-6 w-6" />
+      </button>
       <div className="flex flex-col items-center">
         <VenadoLogo className="text-primary scale-[1.3]" />
         <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
