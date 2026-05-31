@@ -5,7 +5,8 @@ import { exportWeeklyReport } from "@/lib/reportPdf";
 import { toast } from "sonner";
 
 export function SupHeader() {
-  const { userName } = useStore();
+  const { userName, getUnreadCount } = useStore();
+  const unreadCount = getUnreadCount();
   return (
     <div className="flex items-center justify-between px-5 pt-5">
       <div className="flex items-center gap-3">
@@ -15,7 +16,11 @@ export function SupHeader() {
       <div className="flex items-center gap-3">
         <div className="relative">
           <Bell className="h-6 w-6 text-primary" />
-          <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">3</span>
+          {unreadCount > 0 && (
+            <span className="absolute -right-1 -top-1 flex h-4 w-4 items-center justify-center rounded-full bg-destructive text-[9px] font-bold text-white">
+              {unreadCount}
+            </span>
+          )}
         </div>
         <div className="h-9 w-9 rounded-full bg-gradient-to-br from-primary to-primary/70" />
         <div className="text-sm">

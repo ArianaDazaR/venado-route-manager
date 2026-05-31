@@ -51,7 +51,8 @@ export function ExecutionView({ visitId, onBack }: { visitId: number; onBack: ()
       ...v,
       tasks: v.tasks.map((t) => {
         if (t.id !== taskId) return t;
-        const dur = t.startedAt ? Math.floor((Date.now() - t.startedAt) / 1000) : Math.max(60, Math.floor(Math.random() * 240) + 60);
+        // Use real elapsed time: current time - task start time
+        const dur = t.startedAt ? Math.floor((Date.now() - t.startedAt) / 1000) : 0;
         return { ...t, status: "completed", durationSec: dur, photoUrl: photoUrl ?? t.photoUrl };
       }),
     }));
@@ -170,9 +171,20 @@ function TaskRow({ task, index, now, onStart, onPhoto, onComplete, onOpenInvento
 
   const handleAction = () => {
     if (task.id === 5) return onOpenInventory();
-    if (task.status === "pending") onStart();
-    if (task.requiresPhoto) onPhoto();
-    else if (!isCompleted) setTimeout(onComplete, 400);
+    // Photo tasks: must start first, then take photo
+    if (task.requiresPhoto) {
+      if (task.status === "pending") {
+        // Step 1: Start the task
+        onStart();
+      } else if (task.status === "running") {
+        // Step 2: Take photo (task is already running)
+        onPhoto();
+      }
+    } else {
+      // Non-photo tasks: start and then complete
+      if (task.status === "pending") onStart();
+      else if (!isCompleted) setTimeout(onComplete, 400);
+    }
   };
 
   return (
@@ -208,7 +220,13 @@ function TaskRow({ task, index, now, onStart, onPhoto, onComplete, onOpenInvento
             </div>
           )}
           <button onClick={handleAction} className="ml-auto flex items-center gap-1 rounded-xl bg-primary px-3 py-1.5 text-xs font-semibold text-white">
-            {task.id === 5 ? "Abrir inventario" : task.requiresPhoto ? <><Camera className="h-3 w-3" /> Tomar foto</> : <><Play className="h-3 w-3" /> {isRunning ? "Completar" : "Iniciar"}</>}
+            {task.id === 5
+              ? "Abrir inventario"
+              : task.requiresPhoto
+                ? task.status === "pending"
+                  ? <><Play className="h-3 w-3" /> Iniciar tarea</>
+                  : <><Camera className="h-3 w-3" /> Tomar foto</>
+                : <><Play className="h-3 w-3" /> {isRunning ? "Completar" : "Iniciar"}</>}
           </button>
         </div>
       )}

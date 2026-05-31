@@ -3,6 +3,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type Role = "reponedor" | "supervisor";
 
+export interface Notification {
+  id: string;
+  type: "alert" | "ia_recommendation" | "warning";
+  title: string;
+  message: string;
+  timestamp: string;
+  read: boolean;
+}
+
 export interface TaskExec {
   id: number;
   name: string;
@@ -28,6 +37,14 @@ export interface VisitExec {
   tasks: TaskExec[];
   evidenceUrl?: string;
 }
+
+const initialNotifications = (): Notification[] => [
+  { id: "1", type: "alert", title: "Juan Pérez", message: "35 min promedio (+7 min sobre lo esperado)", timestamp: "10:24 a.m.", read: false },
+  { id: "2", type: "warning", title: "Zona Sur", message: "12 PDV pendientes", timestamp: "10:15 a.m.", read: false },
+  { id: "3", type: "warning", title: "Ruta 5", message: "Sobrecarga operativa", timestamp: "09:58 a.m.", read: false },
+  { id: "4", type: "alert", title: "Mayorista San José", message: "Inventario crítico", timestamp: "09:40 a.m.", read: false },
+  { id: "5", type: "ia_recommendation", title: "IA Soluciones", message: "Nueva recomendación de optimización disponible", timestamp: "08:30 a.m.", read: false },
+];
 
 const TASK_TEMPLATE = (): TaskExec[] => [
   { id: 1, name: "Armado y mantenimiento de exhibiciones", description: "Verifica y organiza la exhibición de productos.", requiresPhoto: true, status: "pending", durationSec: 0 },
@@ -70,6 +87,10 @@ interface Store {
   setVisits: (v: VisitExec[]) => void;
   activeVisitId: number | null;
   setActiveVisitId: (id: number | null) => void;
+  notifications: Notification[];
+  markNotificationRead: (id: string) => void;
+  markAllNotificationsRead: () => void;
+  getUnreadCount: () => number;
 }
 
 const Ctx = createContext<Store | null>(null);
@@ -81,6 +102,7 @@ export function StoreProvider({ children }: { children: ReactNode }) {
   const [nombreAsignado, setNombreAsignado] = useState("");
   const [visits, setVisits] = useState<VisitExec[]>(initialVisits());
   const [activeVisitId, setActiveVisitId] = useState<number | null>(null);
+  const [notifications, setNotifications] = useState<Notification[]>(initialNotifications());
 
   const login = async (id: string, pwd: string): Promise<Role | null> => {
     const { data, error } = await supabase
@@ -104,10 +126,36 @@ export function StoreProvider({ children }: { children: ReactNode }) {
     setNombreAsignado("");
     setVisits(initialVisits());
     setActiveVisitId(null);
+    setNotifications(initialNotifications());
   };
 
+  const markNotificationRead = (id: string) => {
+    setNotifications((prev) => prev.map((n) => (n.id === id ? { ...n, read: true } : n)));
+  };
+
+  const markAllNotificationsRead = () => {
+    setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
+  };
+
+  const getUnreadCount = () => notifications.filter((n) => !n.read).length;
+
   return (
-    <Ctx.Provider value={{ role, userId, userName, nombreAsignado, login, logout, visits, setVisits, activeVisitId, setActiveVisitId }}>
+    <Ctx.Provider value={{
+      role,
+      userId,
+      userName,
+      nombreAsignado,
+      login,
+      logout,
+      visits,
+      setVisits,
+      activeVisitId,
+      setActiveVisitId,
+      notifications,
+      markNotificationRead,
+      markAllNotificationsRead,
+      getUnreadCount,
+    }}>
       {children}
     </Ctx.Provider>
   );
