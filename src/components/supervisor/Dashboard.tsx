@@ -1,6 +1,8 @@
-import { Menu, Bell, ChevronDown, MapPin, Users, Clock, Share2, AlertTriangle, TrendingUp, ChevronRight } from "lucide-react";
+import { Menu, Bell, ChevronDown, MapPin, Users, Clock, Share2, AlertTriangle, TrendingUp, ChevronRight, FileDown } from "lucide-react";
 import { VenadoLogo } from "../VenadoLogo";
 import { useStore } from "@/lib/store";
+import { exportWeeklyReport } from "@/lib/reportPdf";
+import { toast } from "sonner";
 
 export function SupHeader() {
   const { userName } = useStore();
