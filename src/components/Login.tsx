@@ -26,6 +26,13 @@ function LoginForm({ onHelp }: { onHelp: () => void }) {
 
   return (
     <div className="relative flex min-h-full flex-col bg-background px-6 pb-10 pt-10">
+      <button
+        onClick={onHelp}
+        aria-label="Instrucciones de uso"
+        className="absolute right-5 top-5 flex h-10 w-10 items-center justify-center rounded-full bg-primary-soft text-primary shadow-sm active:scale-95"
+      >
+        <HelpCircle className="h-6 w-6" />
+      </button>
       <div className="flex flex-col items-center">
         <VenadoLogo className="text-primary scale-[1.3]" />
         <div className="mt-3 flex items-center gap-2 text-xs text-muted-foreground">
